@@ -60,21 +60,22 @@ Add the following to your `~/.tmux.conf` file:
 # See: https://github.com/christoomey/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
-bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
-bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
-bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L\; display-pane'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'\; display-pane
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'\; display-pane
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'\; display-pane
+bind-key -n 'C-\' if-shell "$is_vim" "send-keys C-\\" "select-pane -l\; display-pane"
 tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
 if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l\; display-pane'"
 if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l\; display-pane'"
 
-bind-key -T copy-mode-vi 'C-h' select-pane -L
-bind-key -T copy-mode-vi 'C-j' select-pane -D
-bind-key -T copy-mode-vi 'C-k' select-pane -U
-bind-key -T copy-mode-vi 'C-l' select-pane -R
-bind-key -T copy-mode-vi 'C-\' select-pane -l
+bind-key -T copy-mode-vi 'C-h' select-pane -L\; display-pane
+bind-key -T copy-mode-vi 'C-j' select-pane -D\; display-pane
+bind-key -T copy-mode-vi 'C-k' select-pane -U\; display-pane
+bind-key -T copy-mode-vi 'C-l' select-pane -R\; display-pane
+bind-key -T copy-mode-vi 'C-\' select-pane -l\; display-pane
 ```
 
 #### TPM
@@ -200,11 +201,11 @@ directly. These following fallback mappings can be targeted to the right Tmux
 session by escaping the prefix (Tmux' `send-prefix` command).
 
 ``` tmux
-bind -r C-h run "tmux select-pane -L"
-bind -r C-j run "tmux select-pane -D"
-bind -r C-k run "tmux select-pane -U"
-bind -r C-l run "tmux select-pane -R"
-bind -r C-\ run "tmux select-pane -l"
+bind -r C-h run "tmux select-pane -L\; display-pane"
+bind -r C-j run "tmux select-pane -D\; display-pane"
+bind -r C-k run "tmux select-pane -U\; display-pane"
+bind -r C-l run "tmux select-pane -R\; display-pane"
+bind -r C-\ run "tmux select-pane -l\; display-pane"
 ```
 
 Troubleshooting
